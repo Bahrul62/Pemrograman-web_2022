@@ -3,6 +3,12 @@
 require 'functions.php';
 
 
+//Jika tidak ada id di url
+if (!isset($_GET['id'])) {
+    header("Location: index.php");
+    exit;
+}
+
 //ambil id dari url
 $id = $_GET['id'];
 
