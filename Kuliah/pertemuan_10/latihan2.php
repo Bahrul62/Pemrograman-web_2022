@@ -1,26 +1,7 @@
 <?php 
-
-//koneksi db dan pilih db
-$conn = mysqli_connect('localhost', 'root' , '' ,'pw_2022');
-
-
-//query isi table mahasiswa
-$result = mysqli_query($conn, "select * from mahasiswa");
-
-//ubah data kedalam aray
-// $row = mysqli_fetch_row($result); array numerik
-// $row = mysqli_fetch_assoc($result);aray associative
-// $row = mysqli_fetch_array($result);aray keduanya
-
-$rows = [];
-while($row = mysqli_fetch_array($result)){
-    $rows[] = $row;
-}
-
-//tampung ke variabel mahasiswa
-$mahasiswa = $rows;
+require 'functions.php';
+$mahasiswa = query("select * from mahasiswa")
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -42,7 +23,8 @@ $mahasiswa = $rows;
             <th>Jurusan</th>
             <th>Aksi</th>
         </tr>
-        <?php $i =  1; foreach($mahasiswa as $m ): ?>
+        <?php $i =  1; 
+        foreach($mahasiswa as $m ) : ?>
             <tr>
                 <td><?= $i++; ?></td>
                 <td><img src="img/<?=$m['gambar']; ?> " width="60"></td>
