@@ -25,7 +25,7 @@ if (isset($_POST['tambah'])) {
 </head>
 <body>
     <h3>Form Tambah Data Mahasiswa</h3>
-    <a href="latihan3.php">Kembali</a>
+    <a href="index.php">Kembali</a>
     <br><br>
     <form action="" method="POST">
         <ul>
