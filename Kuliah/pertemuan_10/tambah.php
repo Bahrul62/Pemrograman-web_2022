@@ -1,10 +1,14 @@
 <?php 
+//mengkoneksi dengan scrip php yang ada dalam file functions.php
 require 'functions.php';
 
 // cek apakah tombol sudah ditekan
 if (isset($_POST['tambah'])) {
    if (tambah($_POST) > 0) {
-       echo('data berhasil di tambahkan!');
+       echo "<script>
+                alert('data berhasil ditambahkan');
+                document.location.href = 'latihan3.php';
+            </script>";
    } else {
        echo ('data gagal di tambahkan');
    }
