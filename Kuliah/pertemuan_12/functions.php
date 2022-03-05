@@ -87,17 +87,21 @@ function login($data){
     $username = htmlspecialchars($data['username']);
     $password = htmlspecialchars($data['password']);
 
-    if (query("SELECT * FROM user WHERE username = '$username' && password = '$password'")) {
-        //set session
-        $_SESSION['login'] = true;
-        header("Location: index.php");
-        exit;
-    } else {
+
+    //cek dulu usernamenya
+    if ($user = query("SELECT * FROM user WHERE username = '$username'")) {
+        //cek password
+        if (password_verify($password, $user['password'])) {
+            //set session
+            $_SESSION['login'] = true;
+            header("Location: index.php");
+            exit;
+        }
+    }
         return [ 
             'error' => true,
             'pesan' => 'username/ password salah'
         ];
-    }
 }
 
 function registrasi($data){
@@ -110,7 +114,7 @@ function registrasi($data){
     if (empty($username)|| empty($password1) || empty($password1)) {
         echo "<script>
             alert('username / password tidak boleh kosong');
-            document.location.herf = 'registrasi.php';
+            document.location.href = 'registrasi.php';
         </script>";
         return false;
     }
@@ -118,7 +122,7 @@ function registrasi($data){
     if (query("SELECT * FROM user WHERE username = '$username'")) {
         echo "<script>
             alert('username Sudah terdaftar');
-            document.location.herf = 'registrasi.php';
+            document.location.href = 'registrasi.php';
         </script>";
         return false;
     }
@@ -127,7 +131,7 @@ function registrasi($data){
     if ($password1 !== $password2) {
         echo "<script>
             alert('Password tidak sesuai');
-            document.location.herf = 'registrasi.php';
+            document.location.href = 'registrasi.php';
         </script>";
         return false;
     }
@@ -136,7 +140,7 @@ function registrasi($data){
     if (strlen($password1)<5) {
         echo "<script>
             alert('password terlalu pendek');
-            document.location.herf = 'registrasi.php';
+            document.location.href = 'registrasi.php';
         </script>";
         return false;
     }
@@ -149,7 +153,7 @@ function registrasi($data){
     $query = "INSERT INTO user 
                 VALUES 
             (null, '$username', '$password_baru')";
-            
+
     mysqli_query($conn, $query) or die(mysqli_error($conn));
     return mysqli_affected_rows($conn);
 }
