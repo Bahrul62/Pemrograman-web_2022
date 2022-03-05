@@ -86,8 +86,7 @@ function login($data){
     $conn = koneksi();
     $username = htmlspecialchars($data['username']);
     $password = htmlspecialchars($data['password']);
-
-
+    
     //cek dulu usernamenya
     if ($user = query("SELECT * FROM user WHERE username = '$username'")) {
         //cek password
