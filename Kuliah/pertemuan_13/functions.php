@@ -33,10 +33,15 @@ function upload()
 
     //ketika tidak ada gambar yang dipilih
     if ($error == 4) {
-        echo "<script>
-            alert('Silakan Pilih Gambar!');
-        </script>";
-        return false;
+
+        //jika wajib upload foto
+        // echo "<script>
+        //     alert('Silakan Pilih Gambar!');
+        // </script>";
+        // return false;
+
+        //jika tidak wajib upload foto bisa menggunakan template yang ada di html nophoto.jpg
+        return 'nophoto.jpg ';
     }
 
     //melakukkan pengecekan ganda untuk mengatisipasi user upload file selain gamabar   
@@ -109,6 +114,13 @@ function tambah($data)
 function hapus($id)
 {
     $conn = koneksi();
+
+    //untuk menghapus gambar di folder img
+    $mhs = query("SELECT * FROM mahasiswa WHERE id = $id");
+    if ($mhs['gambar'] != 'nophoto.jpg') {
+        unlink('img/' . $mhs['gambar']);
+    }
+
     mysqli_query($conn, "DELETE FROM mahasiswa WHERE id =$id") or die(mysqli_error($conn));
     return mysqli_affected_rows($conn);
 }
@@ -121,7 +133,17 @@ function ubah($data)
     $nrp = htmlspecialchars($data['nrp']);
     $email = htmlspecialchars($data['email']);
     $jurusan = htmlspecialchars($data['jurusan']);
-    $gambar = htmlspecialchars($data['gambar']);
+    $gambar_lama = htmlspecialchars($data['gamba_lamar']);
+
+    $gambar = upload();
+    if (!$gambar) {
+        return false;
+    }
+
+
+    if ($gambar == 'nophoto.jpg') {
+        $gambar = $gambar_lama;
+    }
 
     $query = "UPDATE mahasiswa SET 
                 nama = '$nama',
