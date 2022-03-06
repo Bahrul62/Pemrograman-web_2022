@@ -1,40 +1,42 @@
-<?php 
+<?php
 //mengkoneksi dengan scrip php yang ada dalam file functions.php
 require 'functions.php';
 
 //menmbuta sission untuk memaksa user agar login dulu
 session_start();
-if(!isset($_SESSION['login'])){
+if (!isset($_SESSION['login'])) {
     header("Location: login.php");
     exit;
 }
 
 // cek apakah tombol sudah ditekan
 if (isset($_POST['tambah'])) {
-   if (tambah($_POST) > 0) {
-       echo "<script>
+    if (tambah($_POST) > 0) {
+        echo "<script>
                 alert('data berhasil ditambahkan');
                 document.location.href = 'index.php';
             </script>";
-   } else {
-       echo ('data gagal di tambahkan');
-   }
+    } else {
+        echo ('data gagal di tambahkan');
+    }
 }
 
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tambah Data Mahaiswa</title>
 </head>
+
 <body>
     <h3>Form Tambah Data Mahasiswa</h3>
     <a href="index.php">Kembali</a>
     <br><br>
-    <form action="" method="POST">
+    <form action="" method="POST" enctype="multipart/form-data">
         <ul>
             <li>
                 <label>
@@ -63,7 +65,7 @@ if (isset($_POST['tambah'])) {
             <li>
                 <label>
                     Gambar :
-                    <input type="text" name="gambar" required>
+                    <input type="file" name="gambar">
                 </label>
             </li>
             <li>
@@ -72,4 +74,5 @@ if (isset($_POST['tambah'])) {
         </ul>
     </form>
 </body>
+
 </html>

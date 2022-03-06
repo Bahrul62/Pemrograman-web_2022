@@ -22,6 +22,63 @@ function query($query)
     return $rows;
 }
 
+//function upload gambar
+function upload()
+{
+    $nama_file = $_FILES['gambar']['name'];
+    $tipe_file = $_FILES['gambar']['type'];
+    $ukuran_file = $_FILES['gambar']['size'];
+    $error = $_FILES['gambar']['error'];
+    $tmp_file = $_FILES['gambar']['tmp_name'];
+
+    //ketika tidak ada gambar yang dipilih
+    if ($error == 4) {
+        echo "<script>
+            alert('Silakan Pilih Gambar!');
+        </script>";
+        return false;
+    }
+
+    //melakukkan pengecekan ganda untuk mengatisipasi user upload file selain gamabar   
+    //1. cek ekstensi file
+    $daftar_gambar = ['jpg', 'jpeg', 'png'];
+    $ekstensi_file = explode('.', $nama_file);
+    $ekstensi_file = strtolower(end($ekstensi_file));
+    if (!in_array($ekstensi_file, $daftar_gambar)) {
+        echo "<script>
+            alert('yang anda pilih bukan gambar!');
+        </script>";
+        return false;
+    }
+    //2. cek type file
+    if ($tipe_file != 'image/png' && $tipe_file != 'image/jpeg') {
+        echo "<script>
+            alert('pastikan file yang di pilih bertipe png/jpg/jpeg');
+        </script>";
+        return false;
+    }
+
+    //cek ukuran file
+    //contoh maksimal 5mb == 5000000
+    if ($ukuran_file > 5000000) {
+        echo "<script>
+            alert('Ukuran file terlalu besar max 5mb');
+        </script>";
+        return false;
+    }
+
+    // jika lolos pengecekan
+    //siap upload file
+    //generate nama file supaya nama file tdk ada yang sama
+    $nama_file_baru = uniqid();
+    $nama_file_baru .= '.';
+    $nama_file_baru .= $ekstensi_file;
+
+    move_uploaded_file($tmp_file, 'img/' . $nama_file_baru);
+
+    return $nama_file_baru;
+}
+
 function tambah($data)
 {
     $conn = koneksi();
@@ -30,7 +87,14 @@ function tambah($data)
     $nrp = htmlspecialchars($data['nrp']);
     $email = htmlspecialchars($data['email']);
     $jurusan = htmlspecialchars($data['jurusan']);
-    $gambar = htmlspecialchars($data['gambar']);
+    // $gambar = htmlspecialchars($data['gambar']);
+
+    //upload gambar
+    $gambar = upload();
+    if (!$gambar) {
+        return false;
+    }
+
 
     $query = "INSERT INTO 
                 mahasiswa 
@@ -39,6 +103,8 @@ function tambah($data)
     mysqli_query($conn, $query) or die(mysqli_error($conn));
     return mysqli_affected_rows($conn);
 }
+
+
 
 function hapus($id)
 {
